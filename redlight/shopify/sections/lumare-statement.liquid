@@ -1,0 +1,21 @@
+{%- render 'lumare-assets' -%}
+<section class="lumare-scope lumare-statement lumare-section">
+  <div class="lumare-wrap lumare-wrap--narrow">
+    {%- if section.settings.eyebrow != blank -%}<p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    <p class="lumare-statement__text" data-lumare-words>{{ section.settings.text }}</p>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-statement { background: {{ section.settings.bg_color }}; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Statement",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Why Lumaré" },
+    { "type": "inline_richtext", "id": "text", "label": "Statement", "info": "Words light up as visitors scroll. Italic words turn red.", "default": "Tissues in every pocket. Sprays in every bag. Pills that leave you foggy. You deserve a <em>calmer</em> daily ritual — one that asks for nothing but ten minutes and a little light." },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#0c0908" }
+  ],
+  "presets": [ { "name": "Lumaré · Statement" } ]
+}
+{% endschema %}

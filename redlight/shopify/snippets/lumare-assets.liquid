@@ -1,0 +1,4 @@
+{%- comment -%} Loads the shared Lumaré stylesheet + script. Rendered at the top of every lumare section. {%- endcomment -%}
+{{ 'lumare-styles.css' | asset_url | stylesheet_tag }}
+<script>document.documentElement.classList.add('lumare-js');</script>
+<script src="{{ 'lumare.js' | asset_url }}" defer></script>

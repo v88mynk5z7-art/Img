@@ -1,0 +1,99 @@
+{%- render 'lumare-assets' -%}
+<section class="lumare-scope lumare-modes lumare-section" data-lumare-modes>
+  <div class="lumare-wrap">
+    <div class="lumare-section-head">
+      <p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>
+      <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="lumare-modes__tabs lumare-reveal" role="tablist" aria-label="{{ section.settings.eyebrow | escape }}">
+      <button type="button" role="tab" id="lumare-tab-nose-{{ section.id }}" aria-controls="lumare-panel-nose-{{ section.id }}" aria-selected="true" data-mode="nose">{{ section.settings.nose_tab }}</button>
+      <button type="button" role="tab" id="lumare-tab-ear-{{ section.id }}" aria-controls="lumare-panel-ear-{{ section.id }}" aria-selected="false" tabindex="-1" data-mode="ear">{{ section.settings.ear_tab }}</button>
+      <span class="lumare-modes__pill" aria-hidden="true"></span>
+    </div>
+
+    <div class="lumare-modes__stage lumare-reveal" data-stage="nose">
+      <div class="lumare-modes__figure" aria-hidden="true">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '400, 600, 900', alt: '' }}
+        {%- else -%}
+          <svg viewBox="0 0 420 460" class="lumare-profile">
+            <defs>
+              <radialGradient id="lumareGlow-{{ section.id }}" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ff5a3c" stop-opacity=".95"/>
+                <stop offset="45%" stop-color="#e0312b" stop-opacity=".45"/>
+                <stop offset="100%" stop-color="#e0312b" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <path class="lumare-profile__line" d="M118 420c4-38 2-66-12-92-22-40-40-74-38-128 3-86 66-150 152-152 70-2 124 40 140 102 4 16 6 30 6 42l30 52c6 10 2 18-8 20l-16 4 6 22c2 8-2 14-10 14l-6 2 4 14c2 10-2 18-12 20-20 4-44 4-64 10-14 4-20 16-20 34v38"/>
+            <path class="lumare-profile__line lumare-profile__ear" d="M204 214c-4-26 14-48 38-48 22 0 38 18 36 42-2 20-16 26-22 40-6 14-2 30-18 36-14 5-28-4-30-16"/>
+            <path class="lumare-profile__line lumare-profile__ear" d="M226 206c2-12 12-18 22-16 10 2 14 12 12 22"/>
+            <path class="lumare-profile__line" d="M372 232c-8 2-14 0-18-4"/>
+            <circle class="lumare-glow lumare-glow--nose" cx="368" cy="226" r="56" fill="url(#lumareGlow-{{ section.id }})"/>
+            <circle class="lumare-glow lumare-glow--ear" cx="238" cy="222" r="70" fill="url(#lumareGlow-{{ section.id }})"/>
+            <circle class="lumare-ping lumare-ping--nose" cx="368" cy="226" r="10"/>
+            <circle class="lumare-ping lumare-ping--ear" cx="238" cy="222" r="10"/>
+          </svg>
+        {%- endif -%}
+      </div>
+
+      <div class="lumare-modes__panels">
+        <div class="lumare-modes__panel" role="tabpanel" id="lumare-panel-nose-{{ section.id }}" aria-labelledby="lumare-tab-nose-{{ section.id }}">
+          <h3>{{ section.settings.nose_title }}</h3>
+          <div class="lumare-modes__body">{{ section.settings.nose_body }}</div>
+          <ul class="lumare-spec-list">
+            <li><span>{{ section.settings.label_1 }}</span><strong>{{ section.settings.nose_1 }}</strong></li>
+            <li><span>{{ section.settings.label_2 }}</span><strong>{{ section.settings.nose_2 }}</strong></li>
+            <li><span>{{ section.settings.label_3 }}</span><strong>{{ section.settings.nose_3 }}</strong></li>
+          </ul>
+        </div>
+        <div class="lumare-modes__panel" role="tabpanel" id="lumare-panel-ear-{{ section.id }}" aria-labelledby="lumare-tab-ear-{{ section.id }}" hidden>
+          <h3>{{ section.settings.ear_title }}</h3>
+          <div class="lumare-modes__body">{{ section.settings.ear_body }}</div>
+          <ul class="lumare-spec-list">
+            <li><span>{{ section.settings.label_1 }}</span><strong>{{ section.settings.ear_1 }}</strong></li>
+            <li><span>{{ section.settings.label_2 }}</span><strong>{{ section.settings.ear_2 }}</strong></li>
+            <li><span>{{ section.settings.label_3 }}</span><strong>{{ section.settings.ear_3 }}</strong></li>
+          </ul>
+        </div>
+        <a href="{{ section.settings.cta_link | default: '#lumare-shop' }}" class="lumare-btn lumare-btn--primary">{{ section.settings.cta_label }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-scope h2, #shopify-section-{{ section.id }} .lumare-scope h3 { color: #f4ede4; }
+  #shopify-section-{{ section.id }} .lumare-modes__body { color: var(--lm-muted); font-size: 16.8px; max-width: 500px; }
+  #shopify-section-{{ section.id }} .lumare-modes__body p { margin: 0; color: inherit; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Nose & ear tabs",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Two rituals · one device" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Made for the places you <em>feel</em> it most." },
+    { "type": "image_picker", "id": "image", "label": "Illustration (optional)", "info": "Replaces the animated face outline." },
+    { "type": "text", "id": "label_1", "label": "Row 1 label", "default": "Session" },
+    { "type": "text", "id": "label_2", "label": "Row 2 label", "default": "Suggested" },
+    { "type": "text", "id": "label_3", "label": "Row 3 label", "default": "Best for" },
+    { "type": "header", "content": "Nose tab" },
+    { "type": "text", "id": "nose_tab", "label": "Tab label", "default": "Nose ritual" },
+    { "type": "text", "id": "nose_title", "label": "Title", "default": "The nose ritual" },
+    { "type": "richtext", "id": "nose_body", "label": "Text", "default": "<p>Rest the soft tips gently at the entrance of each nostril, press once and breathe slowly. Ten minutes of warm red light — perfect with your morning coffee, or on the commute through pollen season.</p>" },
+    { "type": "text", "id": "nose_1", "label": "Row 1 value", "default": "10 minutes" },
+    { "type": "text", "id": "nose_2", "label": "Row 2 value", "default": "1–2× daily" },
+    { "type": "text", "id": "nose_3", "label": "Row 3 value", "default": "Seasonal comfort routines" },
+    { "type": "header", "content": "Ear tab" },
+    { "type": "text", "id": "ear_tab", "label": "Tab label", "default": "Ear ritual" },
+    { "type": "text", "id": "ear_title", "label": "Title", "default": "The ear ritual" },
+    { "type": "richtext", "id": "ear_body", "label": "Text", "default": "<p>Place the tips lightly at the outer ear, never forced inside. Close your eyes, let the glow settle in and make it part of your evening wind-down — a quiet ten minutes that's just for you.</p>" },
+    { "type": "text", "id": "ear_1", "label": "Row 1 value", "default": "10 minutes" },
+    { "type": "text", "id": "ear_2", "label": "Row 2 value", "default": "Once daily" },
+    { "type": "text", "id": "ear_3", "label": "Row 3 value", "default": "Evening wind-down" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Choose your Lumaré" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Leave blank to scroll to the buy box." }
+  ],
+  "presets": [ { "name": "Lumaré · Nose & ear tabs" } ]
+}
+{% endschema %}

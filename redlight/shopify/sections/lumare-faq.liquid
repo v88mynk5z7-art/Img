@@ -1,0 +1,58 @@
+{%- render 'lumare-assets' -%}
+<section class="lumare-scope lumare-faq lumare-section" id="lumare-faq">
+  <div class="lumare-wrap lumare-wrap--mid lumare-faq__grid">
+    <div>
+      <p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>
+      <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+      {%- if section.settings.help != blank -%}<div class="lumare-faq__help lumare-reveal">{{ section.settings.help }}</div>{%- endif -%}
+    </div>
+    <div class="lumare-accordion">
+      {%- for block in section.blocks -%}
+        <details class="lumare-reveal" {% if forloop.first and section.settings.open_first %}open{% endif %} {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.question }}</summary>
+          <div class="lumare-faq__answer">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- comment -%} FAQ rich results {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in section.blocks -%}
+    { "@type": "Question", "name": {{ block.settings.question | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | json }} } }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+<style>
+  #shopify-section-{{ section.id }} .lumare-faq { background: #0c0908; }
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #f4ede4; }
+  #shopify-section-{{ section.id }} .lumare-faq__help p { margin: 0; color: inherit; }
+  #shopify-section-{{ section.id }} .lumare-faq__answer { color: var(--lm-muted); padding: 0 40px 26px 0; }
+  #shopify-section-{{ section.id }} .lumare-faq__answer p { margin: 0 0 10px; color: inherit; }
+  #shopify-section-{{ section.id }} .lumare-accordion summary { color: var(--lm-ivory); }
+  @media (max-width: 600px) { #shopify-section-{{ section.id }} .lumare-faq__answer { padding-right: 0; } }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · FAQ",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "FAQ" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Questions, <em>answered.</em>" },
+    { "type": "richtext", "id": "help", "label": "Help text", "default": "<p>Still wondering? Our team replies within one working day.</p>" },
+    { "type": "checkbox", "id": "open_first", "label": "Open first question", "default": true }
+  ],
+  "blocks": [
+    { "type": "question", "name": "Question", "settings": [
+      { "type": "text", "id": "question", "label": "Question", "default": "Is red light therapy safe?" },
+      { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Add your answer here.</p>" }
+    ] }
+  ],
+  "max_blocks": 20,
+  "presets": [ { "name": "Lumaré · FAQ" } ]
+}
+{% endschema %}

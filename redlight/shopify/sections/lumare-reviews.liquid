@@ -1,0 +1,93 @@
+{%- render 'lumare-assets' -%}
+<section class="lumare-scope lumare-reviews lumare-section" id="lumare-reviews">
+  <div class="lumare-wrap">
+    <div class="lumare-reviews__head">
+      <div>
+        <p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>
+        <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.show_summary -%}
+        <div class="lumare-score lumare-reveal">
+          <div class="lumare-score__big">{{ section.settings.score }}</div>
+          <div>
+            <div class="lumare-stars lumare-stars--lg" role="img" aria-label="{{ section.settings.score }} out of 5 stars">★★★★★</div>
+            <p>{{ section.settings.count_text }}</p>
+            <ul class="lumare-bars" aria-hidden="true">
+              <li><span>5★</span><b style="--lm-w:{{ section.settings.bar_5 }}%"></b></li>
+              <li><span>4★</span><b style="--lm-w:{{ section.settings.bar_4 }}%"></b></li>
+              <li><span>3★</span><b style="--lm-w:{{ section.settings.bar_3 }}%"></b></li>
+              <li><span>2★</span><b style="--lm-w:{{ section.settings.bar_2 }}%"></b></li>
+              <li><span>1★</span><b style="--lm-w:{{ section.settings.bar_1 }}%"></b></li>
+            </ul>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.app_html != blank -%}
+      <div class="lumare-reviews__app">{{ section.settings.app_html }}</div>
+    {%- endif -%}
+
+    <div class="lumare-review-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}
+          <div class="lumare-reviews__app" {{ block.shopify_attributes }}>{% render block %}</div>
+        {%- else -%}
+          <figure class="lumare-review lumare-reveal" {{ block.shopify_attributes }}>
+            <div class="lumare-stars" role="img" aria-label="{{ block.settings.rating }} out of 5 stars">
+              {%- for i in (1..5) -%}{%- if i <= block.settings.rating -%}★{%- else -%}<span class="lumare-star-off">★</span>{%- endif -%}{%- endfor -%}
+            </div>
+            <blockquote><h3>{{ block.settings.title }}</h3><p>{{ block.settings.body }}</p></blockquote>
+            <figcaption>
+              {%- if block.settings.avatar != blank -%}
+                {{ block.settings.avatar | image_url: width: 96 | image_tag: class: 'lumare-avatar lumare-avatar--img', loading: 'lazy', alt: '' }}
+              {%- else -%}
+                <span class="lumare-avatar">{{ block.settings.name | slice: 0 }}</span>
+              {%- endif -%}
+              <span><strong>{{ block.settings.name }}</strong><small>{{ block.settings.meta }}</small></span>
+            </figcaption>
+          </figure>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-reviews { background: #0c0908; }
+  #shopify-section-{{ section.id }} .lumare-scope h2, #shopify-section-{{ section.id }} .lumare-scope h3 { color: #f4ede4; }
+  #shopify-section-{{ section.id }} .lumare-review blockquote { padding: 0; border: 0; font-style: normal; }
+  #shopify-section-{{ section.id }} .lumare-avatar--img { object-fit: cover; }
+  #shopify-section-{{ section.id }} .lumare-reviews__app { margin-bottom: 32px; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Reviews",
+  "settings": [
+    { "type": "paragraph", "content": "Show only genuine customer reviews. Tip: add a reviews app block (Judge.me, Loox…) to pull in verified reviews automatically." },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Reviews" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Ten minutes they <em>look forward</em> to." },
+    { "type": "checkbox", "id": "show_summary", "label": "Show rating summary", "default": true },
+    { "type": "text", "id": "score", "label": "Average rating", "default": "4.9" },
+    { "type": "text", "id": "count_text", "label": "Review count text", "default": "Based on 2,140+ reviews" },
+    { "type": "range", "id": "bar_5", "label": "5-star %", "min": 0, "max": 100, "step": 1, "default": 89 },
+    { "type": "range", "id": "bar_4", "label": "4-star %", "min": 0, "max": 100, "step": 1, "default": 8 },
+    { "type": "range", "id": "bar_3", "label": "3-star %", "min": 0, "max": 100, "step": 1, "default": 2 },
+    { "type": "range", "id": "bar_2", "label": "2-star %", "min": 0, "max": 100, "step": 1, "default": 1 },
+    { "type": "range", "id": "bar_1", "label": "1-star %", "min": 0, "max": 100, "step": 1, "default": 0 },
+    { "type": "liquid", "id": "app_html", "label": "Reviews widget code (optional)", "info": "Paste a reviews app snippet here if it doesn't offer an app block." }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    { "type": "review", "name": "Review", "settings": [
+      { "type": "range", "id": "rating", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
+      { "type": "text", "id": "title", "label": "Headline", "default": "“My spring non-negotiable”" },
+      { "type": "textarea", "id": "body", "label": "Review", "default": "I use it on the train every morning from March to July. Warm, calming and so much easier than carrying three different sprays around." },
+      { "type": "text", "id": "name", "label": "Name", "default": "Hannah R." },
+      { "type": "text", "id": "meta", "label": "Location / detail", "default": "London · Nose ritual" },
+      { "type": "image_picker", "id": "avatar", "label": "Photo (optional)" }
+    ] }
+  ],
+  "max_blocks": 24,
+  "presets": [ { "name": "Lumaré · Reviews" } ]
+}
+{% endschema %}

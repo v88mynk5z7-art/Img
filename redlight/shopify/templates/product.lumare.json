@@ -1,0 +1,553 @@
+/*
+ * Lumaré Duo product page. Assign this template to the product (Template: lumare).
+ * Reviews below are SAMPLE content — replace with genuine reviews before launch.
+ */
+{
+  "sections": {
+    "announce": {
+      "type": "lumare-announce",
+      "settings": {},
+      "blocks": {
+        "msg_1": {
+          "type": "message",
+          "settings": {
+            "text": "Free express shipping on every order"
+          }
+        },
+        "msg_2": {
+          "type": "message",
+          "settings": {
+            "text": "60-night risk-free trial · Love it or return it"
+          }
+        },
+        "msg_3": {
+          "type": "message",
+          "settings": {
+            "text": "2-year warranty · UK-based customer care"
+          }
+        }
+      },
+      "block_order": [
+        "msg_1",
+        "msg_2",
+        "msg_3"
+      ]
+    },
+    "hero": {
+      "type": "lumare-hero",
+      "settings": {},
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "text": "Drug-free, non-invasive 650nm red light"
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "text": "Ten-minute sessions with automatic shut-off"
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "text": "One device for nose and ear use"
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "text": "USB-C rechargeable and pocket-sized"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4"
+      ]
+    },
+    "marquee": {
+      "type": "lumare-marquee",
+      "settings": {},
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "text": "Drug-free"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "text": "650nm red light"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "text": "Nose & ear"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "text": "Ten-minute ritual"
+          }
+        },
+        "item_5": {
+          "type": "item",
+          "settings": {
+            "text": "USB-C rechargeable"
+          }
+        },
+        "item_6": {
+          "type": "item",
+          "settings": {
+            "text": "Fits in a pocket"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4",
+        "item_5",
+        "item_6"
+      ]
+    },
+    "statement": {
+      "type": "lumare-statement",
+      "settings": {}
+    },
+    "modes": {
+      "type": "lumare-modes",
+      "settings": {}
+    },
+    "how": {
+      "type": "lumare-steps",
+      "settings": {},
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "icon": "place",
+            "title": "Place",
+            "body": "Rest the soft silicone tips gently at your nostrils or outer ears. No forcing, no fuss."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "icon": "press",
+            "title": "Press",
+            "body": "One press and the 650nm red light glows on. Choose from three gentle intensity settings."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "icon": "relax",
+            "title": "Relax",
+            "body": "Breathe, read, unwind. Lumaré switches itself off after ten minutes — so you never have to watch the clock."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ]
+    },
+    "science": {
+      "type": "lumare-science",
+      "settings": {},
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "650",
+            "label": "nm wavelength"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "10",
+            "label": "minute sessions"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "0",
+            "label": "drugs or sprays"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3"
+      ]
+    },
+    "features": {
+      "type": "lumare-features",
+      "settings": {},
+      "blocks": {
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "icon": "battery",
+            "title": "USB-C rechargeable",
+            "body": "Weeks of sessions on a single charge. No batteries, no clutter."
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "icon": "timer",
+            "title": "Auto shut-off",
+            "body": "A built-in ten-minute timer, so every session is exactly right."
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "icon": "levels",
+            "title": "Three intensities",
+            "body": "Start soft and build up. One button cycles through each level."
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "icon": "drop",
+            "title": "Easy to clean",
+            "body": "Smooth silicone tips wipe clean in seconds after every use."
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "icon": "gift",
+            "title": "Gift-ready from the first glance",
+            "body": "Presented in a soft-touch box with a travel pouch inside — the kind of gift people actually use, every single day.",
+            "wide": true
+          }
+        },
+        "tile_6": {
+          "type": "tile",
+          "settings": {
+            "icon": "eye",
+            "title": "Silent & discreet",
+            "body": "No hum, no vibration, no fuss. Use it on the sofa, at your desk or on the train — nobody needs to know.",
+            "wide": true
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5",
+        "tile_6"
+      ]
+    },
+    "compare": {
+      "type": "lumare-compare",
+      "settings": {},
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "label": "Drug-free",
+            "us": "yes",
+            "a": "no",
+            "b": "yes"
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "label": "Targets nose & ears directly",
+            "us": "yes",
+            "a": "part",
+            "b": "no"
+          }
+        },
+        "row_3": {
+          "type": "row",
+          "settings": {
+            "label": "Reusable for years",
+            "us": "yes",
+            "a": "no",
+            "b": "yes"
+          }
+        },
+        "row_4": {
+          "type": "row",
+          "settings": {
+            "label": "Fits in a pocket",
+            "us": "yes",
+            "a": "yes",
+            "b": "no"
+          }
+        },
+        "row_5": {
+          "type": "row",
+          "settings": {
+            "label": "Ten-minute auto timer",
+            "us": "yes",
+            "a": "no",
+            "b": "part"
+          }
+        },
+        "row_6": {
+          "type": "row",
+          "settings": {
+            "label": "One-off cost",
+            "us": "[price]",
+            "a": "Ongoing",
+            "b": "£200+"
+          }
+        }
+      },
+      "block_order": [
+        "row_1",
+        "row_2",
+        "row_3",
+        "row_4",
+        "row_5",
+        "row_6"
+      ]
+    },
+    "reviews": {
+      "type": "lumare-reviews",
+      "settings": {},
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "“My spring non-negotiable”",
+            "body": "I use it on the train every morning from March to July. Warm, calming and so much easier than carrying three different sprays around.",
+            "name": "Hannah R.",
+            "meta": "London · Nose ritual"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "“Feels genuinely premium”",
+            "body": "Weighty, silent and beautifully made. The auto shut-off is the best part — I just pop it on while I read before bed.",
+            "name": "David K.",
+            "meta": "Manchester · Ear ritual"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "“Bought the Duo pack”",
+            "body": "My husband kept borrowing mine, so we got a second. It's become our ten-minute wind-down together on the sofa.",
+            "name": "Priya S.",
+            "meta": "Bristol · Both rituals"
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "“Lives in my handbag”",
+            "body": "Tiny, charges on the same cable as my phone, and nobody even notices I'm using it at my desk.",
+            "name": "Emma L.",
+            "meta": "Edinburgh · Nose ritual"
+          }
+        },
+        "review_5": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "“Give it a few weeks”",
+            "body": "Took me a couple of weeks to make it a habit, but now I wouldn't skip it. Wish it came in white too.",
+            "name": "James T.",
+            "meta": "Leeds · Ear ritual"
+          }
+        },
+        "review_6": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "“Gorgeous gift”",
+            "body": "Bought one for my mum. The packaging felt like opening something from a beauty counter. She uses it every evening.",
+            "name": "Sofia M.",
+            "meta": "Brighton · Gift"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3",
+        "review_4",
+        "review_5",
+        "review_6"
+      ]
+    },
+    "buy": {
+      "type": "lumare-buy",
+      "settings": {},
+      "blocks": {
+        "bundle_1": {
+          "type": "bundle",
+          "settings": {
+            "match_variant": "1 Device",
+            "qty": 1,
+            "name": "Lumaré Duo",
+            "sub": "Just for you",
+            "tag": ""
+          }
+        },
+        "bundle_2": {
+          "type": "bundle",
+          "settings": {
+            "match_variant": "2 Devices",
+            "qty": 2,
+            "name": "Duo for Two",
+            "sub": "One each for you & a loved one",
+            "tag": "Most popular",
+            "is_default": true,
+            "is_upsell": true
+          }
+        },
+        "bundle_3": {
+          "type": "bundle",
+          "settings": {
+            "match_variant": "3 Devices",
+            "qty": 3,
+            "name": "Family Set",
+            "sub": "Three devices · best value",
+            "tag": "Best value"
+          }
+        }
+      },
+      "block_order": [
+        "bundle_1",
+        "bundle_2",
+        "bundle_3"
+      ]
+    },
+    "guarantee": {
+      "type": "lumare-guarantee",
+      "settings": {}
+    },
+    "faq": {
+      "type": "lumare-faq",
+      "settings": {},
+      "blocks": {
+        "q_1": {
+          "type": "question",
+          "settings": {
+            "question": "Is red light therapy safe?",
+            "answer": "<p>Lumaré Duo uses low-level 650nm LEDs — no UV and no lasers. The tips stay comfortable to the touch and the device switches off automatically after ten minutes. Please read the safety guidance before use, and speak to your doctor if you have a medical condition, are pregnant or are photosensitive.</p>"
+          }
+        },
+        "q_2": {
+          "type": "question",
+          "settings": {
+            "question": "How do I use it for my nose and for my ears?",
+            "answer": "<p>For the nose ritual, rest the soft tips gently at the entrance of each nostril. For the ear ritual, place them lightly at the outer ear. In both cases the tips should rest, never be pushed in. Press once to start, and relax for ten minutes.</p>"
+          }
+        },
+        "q_3": {
+          "type": "question",
+          "settings": {
+            "question": "How often should I use it?",
+            "answer": "<p>Most people enjoy one or two ten-minute sessions a day. Consistency matters more than duration — think of it like brushing your teeth.</p>"
+          }
+        },
+        "q_4": {
+          "type": "question",
+          "settings": {
+            "question": "When will I notice a difference?",
+            "answer": "<p>Everyone is different. We recommend making Lumaré a daily habit for at least four weeks — which is exactly why you get a full sixty nights to try it risk-free.</p>"
+          }
+        },
+        "q_5": {
+          "type": "question",
+          "settings": {
+            "question": "Can I share it with my partner?",
+            "answer": "<p>For hygiene, we recommend one device per person. That's why our two-device bundle is the most popular choice for couples and families — and it saves you money too.</p>"
+          }
+        },
+        "q_6": {
+          "type": "question",
+          "settings": {
+            "question": "How do I clean and charge it?",
+            "answer": "<p>Wipe the silicone tips with a clean, damp cloth or an alcohol-free wipe after every use. Charge with the included USB-C cable; one full charge lasts for many sessions.</p>"
+          }
+        },
+        "q_7": {
+          "type": "question",
+          "settings": {
+            "question": "Is Lumaré a medical device?",
+            "answer": "<p>No. Lumaré Duo is a personal wellness device. It is not intended to diagnose, treat, cure or prevent any disease, and it is not a substitute for medical advice.</p>"
+          }
+        },
+        "q_8": {
+          "type": "question",
+          "settings": {
+            "question": "What about shipping and returns?",
+            "answer": "<p>Every order ships free by tracked express delivery. If you're not completely happy within sixty nights, contact us for a full refund.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q_1",
+        "q_2",
+        "q_3",
+        "q_4",
+        "q_5",
+        "q_6",
+        "q_7",
+        "q_8"
+      ]
+    },
+    "final": {
+      "type": "lumare-final",
+      "settings": {}
+    },
+    "sticky": {
+      "type": "lumare-sticky",
+      "settings": {}
+    },
+    "popup": {
+      "type": "lumare-popup",
+      "settings": {}
+    }
+  },
+  "order": [
+    "announce",
+    "hero",
+    "marquee",
+    "statement",
+    "modes",
+    "how",
+    "science",
+    "features",
+    "compare",
+    "reviews",
+    "buy",
+    "guarantee",
+    "faq",
+    "final",
+    "sticky",
+    "popup"
+  ]
+}

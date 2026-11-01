@@ -1,0 +1,69 @@
+{%- render 'lumare-assets' -%}
+{%- assign nm = section.settings.wavelength -%}
+{%- assign pos = nm | minus: 400 | times: 100.0 | divided_by: 600 -%}
+<section class="lumare-scope lumare-science lumare-section" id="lumare-science">
+  <div class="lumare-wrap lumare-science__grid">
+    <div class="lumare-science__copy">
+      <p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>
+      <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+      <div class="lumare-science__body lumare-reveal">{{ section.settings.body }}</div>
+      {%- if section.settings.note != blank -%}<p class="lumare-note lumare-reveal">{{ section.settings.note }}</p>{%- endif -%}
+    </div>
+
+    <div class="lumare-spectrum lumare-reveal" role="img" aria-label="{{ section.settings.spectrum_label | escape }}">
+      <div class="lumare-spectrum__labels"><span>400nm</span><span>Visible light</span><span>Near-infrared</span><span>1000nm</span></div>
+      <div class="lumare-spectrum__bar"><span class="lumare-spectrum__marker" style="--lm-pos:{{ pos }}%"><b>{{ nm }}nm</b></span></div>
+      <div class="lumare-spectrum__depth">
+        <div class="lumare-depth"><span class="lumare-depth__label">Blue · 450nm</span><span class="lumare-depth__bar" style="--lm-d:22%"></span></div>
+        <div class="lumare-depth"><span class="lumare-depth__label">Green · 530nm</span><span class="lumare-depth__bar" style="--lm-d:38%"></span></div>
+        <div class="lumare-depth lumare-depth--red"><span class="lumare-depth__label">Red · {{ nm }}nm</span><span class="lumare-depth__bar" style="--lm-d:78%"></span></div>
+        <p class="lumare-depth__caption">{{ section.settings.depth_caption }}</p>
+      </div>
+      {%- if section.blocks.size > 0 -%}
+        <div class="lumare-stats">
+          {%- for block in section.blocks -%}
+            <div {{ block.shopify_attributes }}><strong data-lumare-count="{{ block.settings.value | escape }}">{{ block.settings.value }}</strong><span>{{ block.settings.label }}</span></div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-science { background: #0c0908; }
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #f4ede4; margin-bottom: 8px; }
+  #shopify-section-{{ section.id }} .lumare-science__body p { color: var(--lm-muted); margin-top: 18px; font-size: 16.6px; max-width: 520px; }
+  #shopify-section-{{ section.id }} .lumare-science__body strong { color: var(--lm-ivory); font-weight: 600; }
+  #shopify-section-{{ section.id }} .lumare-note { font-size: 13.4px; color: var(--lm-muted-2); border-left: 2px solid var(--lm-rouge); padding-left: 14px; margin-top: 28px; max-width: 520px; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · The science",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "The science" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Light, at the <em>right</em> wavelength." },
+    { "type": "richtext", "id": "body", "label": "Text", "default": "<p>Red and near-infrared light have been studied by researchers for decades in a field known as <strong>photobiomodulation</strong> — exploring how specific wavelengths of light interact with the cells of the body.</p><p>Lumaré Duo is tuned to 650nm, in the deep-red band of visible light. It's emitted by low-level LEDs — no UV, no lasers, no heat that burns — and delivered precisely where the tips rest.</p>" },
+    { "type": "text", "id": "note", "label": "Disclaimer", "default": "Lumaré is a wellness device. It is not a medicine and is not intended to diagnose, treat, cure or prevent any disease." },
+    { "type": "range", "id": "wavelength", "label": "Wavelength marker (nm)", "min": 600, "max": 900, "step": 5, "default": 650 },
+    { "type": "text", "id": "spectrum_label", "label": "Chart description (screen readers)", "default": "Light spectrum: Lumaré works at 650 nanometres, in the deep-red visible band" },
+    { "type": "text", "id": "depth_caption", "label": "Chart caption", "default": "Longer wavelengths of visible light travel deeper into tissue than shorter ones. Illustrative only." }
+  ],
+  "blocks": [
+    { "type": "stat", "name": "Stat", "settings": [
+      { "type": "text", "id": "value", "label": "Number", "default": "650" },
+      { "type": "text", "id": "label", "label": "Label", "default": "nm wavelength" }
+    ] }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Lumaré · The science",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "650", "label": "nm wavelength" } },
+        { "type": "stat", "settings": { "value": "10", "label": "minute sessions" } },
+        { "type": "stat", "settings": { "value": "0", "label": "drugs or sprays" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

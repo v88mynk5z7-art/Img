@@ -1,0 +1,83 @@
+{%- render 'lumare-assets' -%}
+{%- capture lumare_price -%}{%- if product -%}{% render 'lumare-price', price: product.price_min %}{%- endif -%}{%- endcapture -%}
+<section class="lumare-scope lumare-compare lumare-section lumare-section--light">
+  <div class="lumare-wrap lumare-wrap--mid">
+    <div class="lumare-section-head">
+      <p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>
+      <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="lumare-table-wrap lumare-reveal">
+      <table class="lumare-table">
+        <thead>
+          <tr>
+            <th scope="col"><span class="lumare-sr-only">Feature</span></th>
+            <th scope="col" class="lumare-is-us">{{ section.settings.col_us }}</th>
+            <th scope="col">{{ section.settings.col_a }}</th>
+            <th scope="col">{{ section.settings.col_b }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            <tr {{ block.shopify_attributes }}>
+              <th scope="row">{{ block.settings.label }}</th>
+              {%- assign cells = block.settings.us | append: '||' | append: block.settings.a | append: '||' | append: block.settings.b | split: '||' -%}
+              {%- for cell in cells -%}
+                {%- assign v = cell | strip -%}
+                {%- assign vd = v | downcase -%}
+                <td{% if forloop.first %} class="lumare-is-us"{% endif %}>
+                  {%- case vd -%}
+                    {%- when 'yes' -%}<i class="lumare-yes" role="img" aria-label="Yes"></i>
+                    {%- when 'no' -%}<i class="lumare-no" role="img" aria-label="No"></i>
+                    {%- when 'part' -%}<i class="lumare-part" role="img" aria-label="Partly"></i>
+                    {%- else -%}{%- if forloop.first -%}<strong>{{ v | replace: '[price]', lumare_price }}</strong>{%- else -%}{{ v | replace: '[price]', lumare_price }}{%- endif -%}
+                  {%- endcase -%}
+                </td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-compare { background: {{ section.settings.bg_color }}; }
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #1a1412; }
+  #shopify-section-{{ section.id }} .lumare-table thead .lumare-is-us { color: #fff; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Comparison",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "The difference" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Why people are <em>switching</em> their routine." },
+    { "type": "text", "id": "col_us", "label": "Your column", "default": "Lumaré Duo" },
+    { "type": "text", "id": "col_a", "label": "Column 2", "default": "Sprays & drops" },
+    { "type": "text", "id": "col_b", "label": "Column 3", "default": "Bulky light panels" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f3ece2" }
+  ],
+  "blocks": [
+    { "type": "row", "name": "Row", "settings": [
+      { "type": "paragraph", "content": "Type yes, no or part for a tick, cross or dash — or any text. [price] shows your product's price." },
+      { "type": "text", "id": "label", "label": "Feature", "default": "Drug-free" },
+      { "type": "text", "id": "us", "label": "Your column", "default": "yes" },
+      { "type": "text", "id": "a", "label": "Column 2", "default": "no" },
+      { "type": "text", "id": "b", "label": "Column 3", "default": "yes" }
+    ] }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Lumaré · Comparison",
+      "blocks": [
+        { "type": "row", "settings": { "label": "Drug-free", "us": "yes", "a": "no", "b": "yes" } },
+        { "type": "row", "settings": { "label": "Targets nose & ears directly", "us": "yes", "a": "part", "b": "no" } },
+        { "type": "row", "settings": { "label": "Reusable for years", "us": "yes", "a": "no", "b": "yes" } },
+        { "type": "row", "settings": { "label": "Fits in a pocket", "us": "yes", "a": "yes", "b": "no" } },
+        { "type": "row", "settings": { "label": "Ten-minute auto timer", "us": "yes", "a": "no", "b": "part" } },
+        { "type": "row", "settings": { "label": "One-off cost", "us": "[price]", "a": "Ongoing", "b": "£200+" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

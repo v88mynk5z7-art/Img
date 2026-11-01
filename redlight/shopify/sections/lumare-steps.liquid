@@ -1,0 +1,65 @@
+{%- render 'lumare-assets' -%}
+<section class="lumare-scope lumare-how lumare-section lumare-section--light" id="lumare-how">
+  <div class="lumare-wrap">
+    <div class="lumare-section-head">
+      <p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>
+      <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+    </div>
+    <ol class="lumare-steps">
+      {%- for block in section.blocks -%}
+        <li class="lumare-step lumare-reveal" {{ block.shopify_attributes }}>
+          <span class="lumare-step__num">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+          <div class="lumare-step__icon" aria-hidden="true">
+            {%- if block.settings.icon_image != blank -%}
+              {{ block.settings.icon_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}
+            {%- else -%}
+              {% render 'lumare-icon', name: block.settings.icon %}
+            {%- endif -%}
+          </div>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.body }}</p>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-how { background: {{ section.settings.bg_color }}; }
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #1a1412; }
+  #shopify-section-{{ section.id }} .lumare-step__icon img { width: 34px; height: 34px; object-fit: contain; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · How it works",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "How it works" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Three steps. <em>Ten minutes.</em> Done." },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f3ece2" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "place", "options": [
+          { "value": "place", "label": "Place" }, { "value": "press", "label": "Press" }, { "value": "relax", "label": "Relax / timer" }
+        ] },
+        { "type": "image_picker", "id": "icon_image", "label": "Custom icon (optional)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Place" },
+        { "type": "textarea", "id": "body", "label": "Text", "default": "Rest the soft silicone tips gently at your nostrils or outer ears. No forcing, no fuss." }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Lumaré · How it works",
+      "blocks": [
+        { "type": "step", "settings": { "icon": "place", "title": "Place", "body": "Rest the soft silicone tips gently at your nostrils or outer ears. No forcing, no fuss." } },
+        { "type": "step", "settings": { "icon": "press", "title": "Press", "body": "One press and the 650nm red light glows on. Choose from three gentle intensity settings." } },
+        { "type": "step", "settings": { "icon": "relax", "title": "Relax", "body": "Breathe, read, unwind. Lumaré switches itself off after ten minutes — so you never have to watch the clock." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

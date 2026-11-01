@@ -1,0 +1,80 @@
+{%- render 'lumare-assets' -%}
+{%- assign feature_img = section.settings.image | default: product.featured_media.preview_image -%}
+<section class="lumare-scope lumare-features lumare-section">
+  <div class="lumare-wrap">
+    <div class="lumare-section-head">
+      <p class="lumare-eyebrow lumare-reveal">{{ section.settings.eyebrow }}</p>
+      <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="lumare-bento">
+      <article class="lumare-tile lumare-tile--hero lumare-reveal">
+        <div class="lumare-tile__copy">
+          <h3>{{ section.settings.hero_title }}</h3>
+          <p>{{ section.settings.hero_body }}</p>
+        </div>
+        {%- if feature_img != blank -%}
+          {{ feature_img | image_url: width: 900 | image_tag: loading: 'lazy', widths: '400, 600, 900', sizes: '(min-width: 1080px) 40vw, 80vw', alt: '' }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'lumare-placeholder' }}
+        {%- endif -%}
+      </article>
+      {%- for block in section.blocks -%}
+        <article class="lumare-tile{% if block.settings.wide %} lumare-tile--wide{% endif %} lumare-reveal" {{ block.shopify_attributes }}>
+          {%- if block.settings.icon_image != blank -%}
+            {{ block.settings.icon_image | image_url: width: 120 | image_tag: class: 'lumare-tile__icon lumare-tile__icon--img', loading: 'lazy', alt: '' }}
+          {%- else -%}
+            {% render 'lumare-icon', name: block.settings.icon %}
+          {%- endif -%}
+          {%- if block.settings.wide -%}<div>{%- endif -%}
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.body }}</p>
+          {%- if block.settings.wide -%}</div>{%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-features { background: linear-gradient(180deg, #0c0908 0%, #14100e 100%); }
+  #shopify-section-{{ section.id }} .lumare-scope h2, #shopify-section-{{ section.id }} .lumare-scope h3 { color: #f4ede4; }
+  #shopify-section-{{ section.id }} .lumare-tile__icon--img { width: 34px; height: 34px; object-fit: contain; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Features grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Crafted details" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Small enough for a pocket. <em>Considered</em> in every way." },
+    { "type": "header", "content": "Large tile" },
+    { "type": "text", "id": "hero_title", "label": "Title", "default": "Sculpted to sit softly" },
+    { "type": "textarea", "id": "hero_body", "label": "Text", "default": "A palm-sized, weighted body in matte obsidian, with flexible silicone tips that rest gently instead of pressing." },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Leave blank to use the product's main image." }
+  ],
+  "blocks": [
+    { "type": "tile", "name": "Feature", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "battery", "options": [
+        { "value": "battery", "label": "Battery" }, { "value": "timer", "label": "Timer" }, { "value": "levels", "label": "Levels" },
+        { "value": "drop", "label": "Drop" }, { "value": "gift", "label": "Gift" }, { "value": "eye", "label": "Eye" }, { "value": "sparkle", "label": "Sparkle" }
+      ] },
+      { "type": "image_picker", "id": "icon_image", "label": "Custom icon (optional)" },
+      { "type": "text", "id": "title", "label": "Title", "default": "USB-C rechargeable" },
+      { "type": "textarea", "id": "body", "label": "Text", "default": "Weeks of sessions on a single charge. No batteries, no clutter." },
+      { "type": "checkbox", "id": "wide", "label": "Wide tile", "default": false }
+    ] }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Lumaré · Features grid",
+      "blocks": [
+        { "type": "tile", "settings": { "icon": "battery", "title": "USB-C rechargeable", "body": "Weeks of sessions on a single charge. No batteries, no clutter." } },
+        { "type": "tile", "settings": { "icon": "timer", "title": "Auto shut-off", "body": "A built-in ten-minute timer, so every session is exactly right." } },
+        { "type": "tile", "settings": { "icon": "levels", "title": "Three intensities", "body": "Start soft and build up. One button cycles through each level." } },
+        { "type": "tile", "settings": { "icon": "drop", "title": "Easy to clean", "body": "Smooth silicone tips wipe clean in seconds after every use." } },
+        { "type": "tile", "settings": { "icon": "gift", "title": "Gift-ready from the first glance", "body": "Presented in a soft-touch box with a travel pouch inside — the kind of gift people actually use, every single day.", "wide": true } },
+        { "type": "tile", "settings": { "icon": "eye", "title": "Silent & discreet", "body": "No hum, no vibration, no fuss. Use it on the sofa, at your desk or on the train — nobody needs to know.", "wide": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

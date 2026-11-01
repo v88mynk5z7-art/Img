@@ -1,0 +1,6 @@
+{%- comment -%}
+  Renders a price without trailing ".00" (e.g. £89, £74.50).
+  Usage: {% render 'lumare-price', price: variant.price %}
+{%- endcomment -%}
+{%- assign lumare_cents = price | modulo: 100 -%}
+{%- if lumare_cents == 0 -%}{{ cart.currency.symbol }}{{ price | divided_by: 100 }}{%- else -%}{{ price | money }}{%- endif -%}

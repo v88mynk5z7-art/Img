@@ -1,0 +1,33 @@
+{%- render 'lumare-assets' -%}
+<div class="lumare-scope lumare-sticky-wrap">
+  <div class="lumare-sticky-buy" data-lumare-sticky aria-hidden="true">
+    <div class="lumare-sticky-buy__info">
+      {%- if product.featured_media -%}
+        {{ product.featured_media.preview_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', width: 48 }}
+      {%- endif -%}
+      <div>
+        <strong>{{ section.settings.title | default: product.title }}</strong>
+        <span>{%- if section.settings.show_stars -%}<span class="lumare-stars" aria-hidden="true">★★★★★</span> {% endif -%}{{ section.settings.price_prefix }} {% render 'lumare-price', price: product.price_min %}</span>
+      </div>
+    </div>
+    <a href="#lumare-shop" class="lumare-btn lumare-btn--primary lumare-btn--sm" tabindex="-1">{{ section.settings.cta_label }}</a>
+  </div>
+</div>
+<style>
+  #shopify-section-{{ section.id }} .lumare-sticky-wrap { background: transparent; }
+  #shopify-section-{{ section.id }} .lumare-sticky-buy__info strong { color: #f4ede4; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Mobile buy bar",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "Appears on phones after the hero and hides near the buy box." },
+    { "type": "text", "id": "title", "label": "Title", "info": "Leave blank to show the product title.", "default": "Lumaré Duo" },
+    { "type": "checkbox", "id": "show_stars", "label": "Show stars", "default": true },
+    { "type": "text", "id": "price_prefix", "label": "Price prefix", "default": "from" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Shop now" }
+  ],
+  "presets": [ { "name": "Lumaré · Mobile buy bar" } ]
+}
+{% endschema %}

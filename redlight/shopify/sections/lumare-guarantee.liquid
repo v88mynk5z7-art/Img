@@ -1,0 +1,50 @@
+{%- render 'lumare-assets' -%}
+<section class="lumare-scope lumare-guarantee lumare-section lumare-section--light">
+  <div class="lumare-wrap lumare-guarantee__grid">
+    <div class="lumare-seal lumare-reveal" aria-hidden="true">
+      {%- if section.settings.seal_image != blank -%}
+        {{ section.settings.seal_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: '' }}
+      {%- else -%}
+        <svg viewBox="0 0 200 200">
+          <defs><path id="lumareSeal-{{ section.id }}" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+          <text><textPath href="#lumareSeal-{{ section.id }}" textLength="488" lengthAdjust="spacing">{{ section.settings.seal_ring | upcase }} · {{ section.settings.seal_ring | upcase }} ·</textPath></text>
+        </svg>
+        <div class="lumare-seal__core"><strong>{{ section.settings.seal_number }}</strong><span>{{ section.settings.seal_unit }}</span></div>
+      {%- endif -%}
+    </div>
+    <div class="lumare-reveal">
+      <p class="lumare-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="lumare-guarantee__body">{{ section.settings.body }}</div>
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_link | default: '#lumare-shop' }}" class="lumare-btn lumare-btn--dark">{{ section.settings.cta_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-guarantee { background: {{ section.settings.bg_color }}; }
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #1a1412; margin-bottom: 20px; }
+  #shopify-section-{{ section.id }} .lumare-guarantee__body { font-size: 17.3px; max-width: 560px; margin-bottom: 30px; color: var(--lm-cocoa-muted); }
+  #shopify-section-{{ section.id }} .lumare-guarantee__body p { margin: 0; color: inherit; }
+  #shopify-section-{{ section.id }} .lumare-seal img { width: 100%; height: auto; }
+  @media (max-width: 900px) { #shopify-section-{{ section.id }} .lumare-guarantee__body { margin-left: auto; margin-right: auto; } }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Guarantee",
+  "settings": [
+    { "type": "text", "id": "seal_number", "label": "Seal number", "default": "60" },
+    { "type": "text", "id": "seal_unit", "label": "Seal word", "default": "nights" },
+    { "type": "text", "id": "seal_ring", "label": "Seal ring text", "default": "Risk-free · sixty nights" },
+    { "type": "image_picker", "id": "seal_image", "label": "Custom badge image (optional)" },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Our promise" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Sixty nights to fall in <em>love</em> with it." },
+    { "type": "richtext", "id": "body", "label": "Text", "default": "<p>Rituals take time to form. So try Lumaré Duo for a full sixty nights. If it isn't for you, send it back and we'll refund you in full — no forms, no fuss, no awkward questions.</p>" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Start your trial" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Leave blank to scroll to the buy box." },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f3ece2" }
+  ],
+  "presets": [ { "name": "Lumaré · Guarantee" } ]
+}
+{% endschema %}

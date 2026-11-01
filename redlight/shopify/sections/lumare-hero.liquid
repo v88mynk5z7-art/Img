@@ -1,0 +1,107 @@
+{%- render 'lumare-assets' -%}
+{%- assign hero_media = section.settings.image | default: product.featured_media.preview_image -%}
+<section class="lumare-scope lumare-hero" data-lumare-hero>
+  <div class="lumare-hero__aura" aria-hidden="true"></div>
+  <div class="lumare-wrap lumare-hero__grid">
+    <div class="lumare-hero__copy">
+      {%- if section.settings.show_rating -%}
+        <a href="#lumare-reviews" class="lumare-rating lumare-reveal">
+          <span class="lumare-stars" aria-hidden="true">★★★★★</span>
+          <span><strong>{{ section.settings.rating_text }}</strong> {{ section.settings.rating_sub }}</span>
+        </a>
+      {%- endif -%}
+      <h1 class="lumare-reveal">{{ section.settings.heading }}</h1>
+      <div class="lumare-lede lumare-reveal">{{ section.settings.lede }}</div>
+      {%- if section.blocks.size > 0 -%}
+        <ul class="lumare-ticks lumare-reveal">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <div class="lumare-hero__ctas lumare-reveal">
+        <a href="{{ section.settings.cta_link | default: '#lumare-shop' }}" class="lumare-btn lumare-btn--primary lumare-btn--lg">
+          {{ section.settings.cta_label }}
+          {%- if section.settings.show_price and product -%}<span class="lumare-btn__price">{{ section.settings.price_prefix }} {% render 'lumare-price', price: product.price_min %}</span>{%- endif -%}
+        </a>
+        {%- if section.settings.cta2_label != blank -%}
+          <a href="{{ section.settings.cta2_link | default: '#lumare-how' }}" class="lumare-btn lumare-btn--ghost lumare-btn--lg">{{ section.settings.cta2_label }}</a>
+        {%- endif -%}
+      </div>
+      <ul class="lumare-assure lumare-reveal">
+        {%- if section.settings.assure_1 != blank -%}<li>{% render 'lumare-icon', name: 'truck' %}{{ section.settings.assure_1 }}</li>{%- endif -%}
+        {%- if section.settings.assure_2 != blank -%}<li>{% render 'lumare-icon', name: 'trial' %}{{ section.settings.assure_2 }}</li>{%- endif -%}
+        {%- if section.settings.assure_3 != blank -%}<li>{% render 'lumare-icon', name: 'shield' %}{{ section.settings.assure_3 }}</li>{%- endif -%}
+      </ul>
+    </div>
+
+    <div class="lumare-hero__visual lumare-reveal">
+      <div class="lumare-orb" aria-hidden="true"></div>
+      {%- if section.settings.ring_text != blank -%}
+        <svg class="lumare-ring" viewBox="0 0 400 400" aria-hidden="true">
+          <defs><path id="lumareRing-{{ section.id }}" d="M200,200 m-172,0 a172,172 0 1,1 344,0 a172,172 0 1,1 -344,0"/></defs>
+          <text><textPath href="#lumareRing-{{ section.id }}" textLength="1078" lengthAdjust="spacing">{{ section.settings.ring_text | upcase }} · {{ section.settings.ring_text | upcase }} ·</textPath></text>
+        </svg>
+      {%- endif -%}
+      {%- if hero_media != blank -%}
+        {{ hero_media | image_url: width: 1200 | image_tag: class: 'lumare-hero__img', loading: 'eager', fetchpriority: 'high', widths: '400, 600, 800, 1000, 1200', sizes: '(min-width: 900px) 45vw, 90vw', alt: section.settings.image_alt }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'lumare-placeholder lumare-hero__img' }}
+      {%- endif -%}
+      {%- if section.settings.chip_a_value != blank -%}<div class="lumare-chip lumare-chip--a"><strong>{{ section.settings.chip_a_value }}</strong><span>{{ section.settings.chip_a_label }}</span></div>{%- endif -%}
+      {%- if section.settings.chip_b_value != blank -%}<div class="lumare-chip lumare-chip--b"><strong>{{ section.settings.chip_b_value }}</strong><span>{{ section.settings.chip_b_label }}</span></div>{%- endif -%}
+    </div>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} { background: #0c0908; }
+  #shopify-section-{{ section.id }} .lumare-scope h1 { color: #f4ede4; }
+  #shopify-section-{{ section.id }} .lumare-lede p { margin: 0; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Hero",
+  "class": "lumare-section-hero",
+  "settings": [
+    { "type": "checkbox", "id": "show_rating", "label": "Show rating pill", "default": true },
+    { "type": "text", "id": "rating_text", "label": "Rating", "default": "4.9/5" },
+    { "type": "text", "id": "rating_sub", "label": "Rating subtext", "default": "from 2,140+ reviews" },
+    { "type": "inline_richtext", "id": "heading", "label": "Headline", "info": "Italic words turn red.", "default": "The red light ritual for your <em>nose</em> &amp; <em>ears</em>." },
+    { "type": "richtext", "id": "lede", "label": "Intro", "default": "<p>Lumaré Duo delivers a gentle 650nm red glow through soft silicone tips. Ten drug-free minutes a day, wherever you are.</p>" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "cta_label", "label": "Main button", "default": "Shop Lumaré Duo" },
+    { "type": "url", "id": "cta_link", "label": "Main button link", "info": "Leave blank to scroll to the buy box." },
+    { "type": "checkbox", "id": "show_price", "label": "Show price in button", "default": true },
+    { "type": "text", "id": "price_prefix", "label": "Price prefix", "default": "from" },
+    { "type": "text", "id": "cta2_label", "label": "Second button", "default": "See how it works" },
+    { "type": "url", "id": "cta2_link", "label": "Second button link", "info": "Leave blank to scroll to How it works." },
+    { "type": "header", "content": "Reassurance row" },
+    { "type": "text", "id": "assure_1", "label": "Shipping", "default": "Free express shipping" },
+    { "type": "text", "id": "assure_2", "label": "Trial", "default": "60-night trial" },
+    { "type": "text", "id": "assure_3", "label": "Warranty", "default": "2-year warranty" },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Hero image", "info": "Transparent PNG works best. Leave blank to use the product's main image." },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Lumaré Duo red light device with two soft silicone tips glowing red" },
+    { "type": "text", "id": "ring_text", "label": "Rotating ring text", "default": "650 nm red light · drug-free · ten-minute ritual" },
+    { "type": "text", "id": "chip_a_value", "label": "Badge 1 value", "default": "650nm" },
+    { "type": "text", "id": "chip_a_label", "label": "Badge 1 label", "default": "Red wavelength" },
+    { "type": "text", "id": "chip_b_value", "label": "Badge 2 value", "default": "10 min" },
+    { "type": "text", "id": "chip_b_label", "label": "Badge 2 label", "default": "Auto shut-off" }
+  ],
+  "blocks": [
+    { "type": "benefit", "name": "Benefit", "settings": [ { "type": "text", "id": "text", "label": "Benefit", "default": "Drug-free, non-invasive 650nm red light" } ] }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Lumaré · Hero",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Drug-free, non-invasive 650nm red light" } },
+        { "type": "benefit", "settings": { "text": "Ten-minute sessions with automatic shut-off" } },
+        { "type": "benefit", "settings": { "text": "One device for nose and ear use" } },
+        { "type": "benefit", "settings": { "text": "USB-C rechargeable and pocket-sized" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

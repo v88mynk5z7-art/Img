@@ -1,0 +1,54 @@
+{%- render 'lumare-assets' -%}
+{%- assign popup_form_id = 'lumare-popup-form-' | append: section.id -%}
+<div class="lumare-scope lumare-popup-wrap">
+{%- form 'customer', id: popup_form_id, class: 'lumare-popup-form' -%}
+  <div class="lumare-popup" data-lumare-popup aria-hidden="true" data-delay="{{ section.settings.delay }}" data-posted="{% if form.posted_successfully? %}true{% else %}false{% endif %}">
+    <div class="lumare-popup__scrim" data-lumare-popup-close></div>
+    <div class="lumare-popup__card" role="dialog" aria-modal="true" aria-labelledby="lumare-popup-title-{{ section.id }}">
+      <button type="button" class="lumare-icon-btn lumare-popup__close" data-lumare-popup-close aria-label="Close">{% render 'lumare-icon', name: 'close' %}</button>
+      <div class="lumare-popup__glow" aria-hidden="true"></div>
+      <p class="lumare-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 id="lumare-popup-title-{{ section.id }}">{{ section.settings.heading }}</h2>
+      {%- if form.posted_successfully? -%}
+        <p class="lumare-popup__success">{{ section.settings.success_text }} <strong>{{ section.settings.code }}</strong></p>
+        <button type="button" class="lumare-popup__skip" data-lumare-popup-close>{{ section.settings.continue_label }}</button>
+      {%- else -%}
+        <p>{{ section.settings.body }}</p>
+        <div class="lumare-popup__fields">
+          <input type="hidden" name="contact[tags]" value="newsletter,lumare-popup">
+          <input type="hidden" name="contact[accepts_marketing]" value="true">
+          <label class="lumare-sr-only" for="lumare-pop-email-{{ section.id }}">Email address</label>
+          <input id="lumare-pop-email-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ section.settings.placeholder | escape }}" autocomplete="email" required>
+          <button class="lumare-btn lumare-btn--primary lumare-btn--block" type="submit">{{ section.settings.button }}</button>
+          {%- if form.errors -%}<div class="lumare-popup__error">{{ form.errors | default_errors }}</div>{%- endif -%}
+        </div>
+        <button type="button" class="lumare-popup__skip" data-lumare-popup-close>{{ section.settings.skip_label }}</button>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endform -%}
+</div>
+<style>
+  #shopify-section-{{ section.id }} .lumare-popup-wrap { background: transparent; }
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #f4ede4; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Email popup",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "Signups are saved to Shopify Customers with email marketing consent. Create the matching discount code in Discounts." },
+    { "type": "range", "id": "delay", "label": "Show after (seconds)", "min": 5, "max": 90, "step": 5, "default": 25 },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Welcome to Lumaré" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Take <em>10% off</em> your first ritual." },
+    { "type": "text", "id": "body", "label": "Text", "default": "Join our list for your code, plus gentle notes on getting the most from your Lumaré." },
+    { "type": "text", "id": "placeholder", "label": "Email placeholder", "default": "Your email" },
+    { "type": "text", "id": "button", "label": "Button", "default": "Unlock 10% off" },
+    { "type": "text", "id": "skip_label", "label": "Dismiss link", "default": "No thanks" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "You're in. Your code:" },
+    { "type": "text", "id": "code", "label": "Discount code", "default": "GLOW10" },
+    { "type": "text", "id": "continue_label", "label": "After signup link", "default": "Continue shopping" }
+  ],
+  "presets": [ { "name": "Lumaré · Email popup" } ]
+}
+{% endschema %}

@@ -1,0 +1,317 @@
+{%- render 'lumare-assets' -%}
+{%- comment -%}
+  The buy box. A real Shopify product form: each bundle card is a radio for one
+  product variant (name="id"), so it works even with JavaScript off.
+  With JS on, Add to bag uses /cart/add.js and opens the Lumaré cart drawer.
+{%- endcomment -%}
+{%- comment -%}
+  Match each bundle block to a variant by its exact title. The per-device price comes
+  from the first matched bundle, so "save £X" is always measured against buying singles.
+{%- endcomment -%}
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign form_id = 'lumare-form-' | append: section.id
+  assign matched_count = 0
+  assign unit_price = 0
+  assign default_id = ''
+  assign upsell_from = ''
+  assign upsell_to = nil
+  assign upsell_name = ''
+  assign upsell_qty = 1
+  for block in section.blocks
+    assign v = product.variants | where: 'title', block.settings.match_variant | first
+    if v
+      assign matched_count = matched_count | plus: 1
+      if unit_price == 0
+        assign unit_price = v.price | divided_by: block.settings.qty
+      endif
+      if block.settings.is_default and v.available
+        assign default_id = v.id
+      endif
+      if block.settings.qty == 1 and upsell_from == ''
+        assign upsell_from = v.id
+      endif
+      if block.settings.is_upsell
+        assign upsell_to = v
+        assign upsell_name = block.settings.name
+        assign upsell_qty = block.settings.qty
+      endif
+    endif
+  endfor
+  if default_id == ''
+    assign default_id = current.id
+  endif
+  assign gallery_media = product.media | where: 'media_type', 'image'
+  assign main_media = product.featured_media.preview_image | default: section.settings.fallback_image
+-%}
+
+<section class="lumare-scope lumare-shop lumare-section" id="lumare-shop"
+  data-lumare-buy
+  data-currency="{{ cart.currency.iso_code }}"
+  data-locale="{{ request.locale.iso_code }}">
+  <div class="lumare-wrap lumare-shop__grid">
+
+    <div class="lumare-gallery lumare-reveal">
+      <div class="lumare-gallery__main">
+        <div class="lumare-gallery__glow" aria-hidden="true"></div>
+        {%- if main_media != blank -%}
+          {{ main_media | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '400, 600, 800, 1000, 1200', sizes: '(min-width: 900px) 50vw, 92vw', alt: product.title }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'lumare-placeholder' }}
+        {%- endif -%}
+        {%- if section.settings.badge != blank -%}<span class="lumare-gallery__badge">{{ section.settings.badge }}</span>{%- endif -%}
+      </div>
+      {%- if gallery_media.size > 1 -%}
+        <div class="lumare-thumbs" role="list">
+          {%- for media in gallery_media limit: 8 -%}
+            <button type="button" class="lumare-thumb" role="listitem" data-lumare-thumb
+              data-src="{{ media.preview_image | image_url: width: 1200 }}"
+              data-srcset="{{ media.preview_image | image_url: width: 600 }} 600w, {{ media.preview_image | image_url: width: 1200 }} 1200w"
+              aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-label="Show image {{ forloop.index }}">
+              {{ media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.in_box != blank -%}
+        <div class="lumare-inbox">
+          <p class="lumare-eyebrow">{{ section.settings.in_box_title }}</p>
+          <ul>
+            {%- assign box_lines = section.settings.in_box | newline_to_br | split: '<br />' -%}
+            {%- for line in box_lines -%}
+              {%- assign l = line | strip -%}
+              {%- if l != '' -%}
+                {%- assign parts = l | split: '×' -%}
+                {%- if parts.size > 1 -%}<li><b>{{ parts[0] | strip }}×</b> {{ parts[1] | strip }}</li>{%- else -%}<li>{{ l }}</li>{%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="lumare-buy">
+      <p class="lumare-eyebrow">{{ section.settings.eyebrow | default: product.vendor }}</p>
+      <h2>{%- if section.settings.heading != blank -%}{{ section.settings.heading }}{%- else -%}{{ product.title }}{%- endif -%}</h2>
+      {%- if section.settings.rating_text != blank -%}
+        <a href="#lumare-reviews" class="lumare-rating lumare-rating--inline"><span class="lumare-stars" aria-hidden="true">★★★★★</span><span>{{ section.settings.rating_text }}</span></a>
+      {%- endif -%}
+
+      {% form 'product', product, id: form_id, class: 'lumare-form', novalidate: 'novalidate', data-lumare-form: '' %}
+        <fieldset class="lumare-bundles">
+          <legend>{{ section.settings.bundles_label }}</legend>
+
+          {%- if matched_count > 0 -%}
+            {%- for block in section.blocks -%}
+              {%- assign v = product.variants | where: 'title', block.settings.match_variant | first -%}
+              {%- if v -%}
+                {%- assign compare = unit_price | times: block.settings.qty -%}
+                {%- if v.compare_at_price > v.price -%}{%- assign compare = v.compare_at_price -%}{%- endif -%}
+                {%- assign save = compare | minus: v.price -%}
+                {%- assign each = v.price | divided_by: block.settings.qty -%}
+                <label class="lumare-bundle{% unless v.available %} lumare-is-soldout{% endunless %}" {{ block.shopify_attributes }}>
+                  {%- if block.settings.tag != blank -%}<span class="lumare-bundle__tag">{{ block.settings.tag }}</span>{%- endif -%}
+                  <input type="radio" name="id" value="{{ v.id }}" data-price="{{ v.price }}" {% if v.id == default_id %}checked{% endif %} {% unless v.available %}disabled{% endunless %}>
+                  <span class="lumare-bundle__radio" aria-hidden="true"></span>
+                  <span>
+                    <span class="lumare-bundle__name">{{ block.settings.name }}
+                      {%- if save > 0 -%}<span class="lumare-bundle__save">{{ section.settings.save_label }} {% render 'lumare-price', price: save %}</span>{%- endif -%}
+                      {%- unless v.available -%}<span class="lumare-bundle__save">{{ section.settings.sold_out_label }}</span>{%- endunless -%}
+                    </span>
+                    <span class="lumare-bundle__sub">{{ block.settings.sub }}{% if block.settings.qty > 1 %} · {% render 'lumare-price', price: each %} {{ section.settings.each_label }}{% endif %}</span>
+                  </span>
+                  <span class="lumare-bundle__price"><strong>{% render 'lumare-price', price: v.price %}</strong>{%- if save > 0 -%}<s>{% render 'lumare-price', price: compare %}</s>{%- endif -%}</span>
+                </label>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- comment -%} No bundle block matches a variant yet — list the product's variants instead. {%- endcomment -%}
+            {%- for v in product.variants -%}
+              <label class="lumare-bundle{% unless v.available %} lumare-is-soldout{% endunless %}">
+                <input type="radio" name="id" value="{{ v.id }}" data-price="{{ v.price }}" {% if v.id == current.id %}checked{% endif %} {% unless v.available %}disabled{% endunless %}>
+                <span class="lumare-bundle__radio" aria-hidden="true"></span>
+                <span><span class="lumare-bundle__name">{% if v.title == 'Default Title' %}{{ product.title }}{% else %}{{ v.title }}{% endif %}</span></span>
+                <span class="lumare-bundle__price"><strong>{% render 'lumare-price', price: v.price %}</strong></span>
+              </label>
+            {%- endfor -%}
+            {%- if request.design_mode -%}
+              <p class="lumare-editor-note">Tip: add Bundle blocks and set “Variant title” to match your variant names exactly (e.g. 2 Devices) to show savings and badges.</p>
+            {%- endif -%}
+          {%- endif -%}
+        </fieldset>
+
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="lumare-btn lumare-btn--primary lumare-btn--xl lumare-btn--block" {% unless product.available %}disabled{% endunless %}>
+          {%- if product.available -%}
+            <span>{{ section.settings.atc_label }}</span><span class="lumare-btn__sep" aria-hidden="true">·</span><span data-lumare-buy-total>{% render 'lumare-price', price: current.price %}</span>
+          {%- else -%}
+            <span>{{ section.settings.sold_out_label }}</span>
+          {%- endif -%}
+        </button>
+      {% endform %}
+
+      {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+        <div class="lumare-pay-icons" aria-label="Accepted payment methods">
+          {%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag: class: 'lumare-pay-icon' }}{%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <ul class="lumare-buy__assure">
+        {%- if section.settings.arrival_text != blank -%}<li>{% render 'lumare-icon', name: 'truck' %}<span>{{ section.settings.arrival_text }} <strong data-lumare-arrival="{{ section.settings.delivery_days }}">{{ section.settings.delivery_days }} working days</strong></span></li>{%- endif -%}
+        {%- if section.settings.assure_2 != blank -%}<li>{% render 'lumare-icon', name: 'trial' %}<span>{{ section.settings.assure_2 }}</span></li>{%- endif -%}
+        {%- if section.settings.assure_3 != blank -%}<li>{% render 'lumare-icon', name: 'shield' %}<span>{{ section.settings.assure_3 }}</span></li>{%- endif -%}
+      </ul>
+
+      {%- if section.settings.specs != blank -%}
+        <details class="lumare-buy__details">
+          <summary>{{ section.settings.specs_title }}</summary>
+          <dl class="lumare-specs">
+            {%- assign spec_lines = section.settings.specs | newline_to_br | split: '<br />' -%}
+            {%- for line in spec_lines -%}
+              {%- assign kv = line | strip | split: ':' -%}
+              {%- if kv.size > 1 -%}<div><dt>{{ kv[0] | strip }}</dt><dd>{{ kv[1] | strip }}</dd></div>{%- endif -%}
+            {%- endfor -%}
+          </dl>
+        </details>
+      {%- endif -%}
+      {%- if section.settings.safety != blank -%}
+        <details class="lumare-buy__details">
+          <summary>{{ section.settings.safety_title }}</summary>
+          <div class="lumare-buy__rte">{{ section.settings.safety }}</div>
+        </details>
+      {%- endif -%}
+      {%- if section.settings.show_description and product.description != blank -%}
+        <details class="lumare-buy__details">
+          <summary>{{ section.settings.description_title }}</summary>
+          <div class="lumare-buy__rte">{{ product.description }}</div>
+        </details>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} Cart drawer {%- endcomment -%}
+  {%- capture upsell_text -%}
+    {%- if upsell_to -%}
+      {%- assign upsell_save = unit_price | times: upsell_qty | minus: upsell_to.price -%}
+      {%- capture upsell_save_html -%}<strong>{% render 'lumare-price', price: upsell_save %}</strong>{%- endcapture -%}
+      {%- capture upsell_name_html -%}<strong>{{ upsell_name | default: upsell_to.title }}</strong>{%- endcapture -%}
+      {{ section.settings.upsell_text | replace: '[bundle]', upsell_name_html | replace: '[save]', upsell_save_html }}
+    {%- endif -%}
+  {%- endcapture -%}
+  <div class="lumare-drawer" data-lumare-drawer aria-hidden="true"
+    data-upsell-from="{{ upsell_from }}"
+    data-upsell-to="{% if upsell_to %}{{ upsell_to.id }}{% endif %}"
+    data-upsell-text="{{ upsell_text | escape }}"
+    data-upsell-button="{{ section.settings.upsell_button | escape }}"
+    data-upgrade-toast="{{ section.settings.upgrade_toast | escape }}"
+    data-empty-text="{{ section.settings.empty_text | escape }}">
+    <div class="lumare-drawer__scrim" data-lumare-cart-close></div>
+    <aside class="lumare-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="lumare-drawer-title-{{ section.id }}" tabindex="-1">
+      <div class="lumare-drawer__head">
+        <h2 id="lumare-drawer-title-{{ section.id }}">{{ section.settings.drawer_title }}</h2>
+        <button type="button" class="lumare-icon-btn" data-lumare-cart-close aria-label="Close">{% render 'lumare-icon', name: 'close' %}</button>
+      </div>
+      {%- if section.settings.drawer_ship != blank -%}<p class="lumare-drawer__ship">{% render 'lumare-icon', name: 'truck' %} <span>{{ section.settings.drawer_ship }}</span></p>{%- endif -%}
+      <div class="lumare-drawer__items" data-lumare-cart-items></div>
+      <div class="lumare-drawer__upsell" data-lumare-upsell></div>
+      <div class="lumare-drawer__foot">
+        <div class="lumare-drawer__row"><span>{{ section.settings.subtotal_label }}</span><strong data-lumare-cart-subtotal>{% render 'lumare-price', price: cart.total_price %}</strong></div>
+        {%- if section.settings.shipping_note != blank -%}<div class="lumare-drawer__row lumare-drawer__row--muted"><span>{{ section.settings.shipping_label }}</span><span>{{ section.settings.shipping_note }}</span></div>{%- endif -%}
+        <a href="/checkout" class="lumare-btn lumare-btn--primary lumare-btn--xl lumare-btn--block">{{ section.settings.checkout_label }}</a>
+        <a href="{{ routes.cart_url }}" class="lumare-drawer__cartlink">{{ section.settings.cart_link_label }}</a>
+        <p class="lumare-drawer__trust">{% render 'lumare-icon', name: 'lock' %} {{ section.settings.trust_text }}</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<script type="application/ld+json">{{ product | structured_data }}</script>
+
+<style>
+  #shopify-section-{{ section.id }} .lumare-shop { background: radial-gradient(ellipse 50% 60% at 25% 40%, rgba(110, 12, 16, .4), transparent 70%), #14100e; }
+  {%- if section.settings.bg_image != blank -%}
+  #shopify-section-{{ section.id }} .lumare-gallery__main { background: url('{{ section.settings.bg_image | image_url: width: 1400 }}') center/cover no-repeat; }
+  {%- endif -%}
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #f4ede4; }
+  #shopify-section-{{ section.id }} .lumare-buy h2 em { color: var(--lm-rouge); }
+  #shopify-section-{{ section.id }} .lumare-drawer__head h2 { font-size: 32px; }
+  #shopify-section-{{ section.id }} .lumare-buy__rte { padding-bottom: 22px; color: var(--lm-muted); font-size: 14.7px; }
+  #shopify-section-{{ section.id }} .lumare-buy__rte p { margin: 0 0 10px; color: inherit; }
+</style>
+
+{% schema %}
+{
+  "name": "Lumaré · Buy box",
+  "class": "lumare-section-buy",
+  "settings": [
+    { "type": "paragraph", "content": "This is the real product form. Each Bundle block shows one product variant — set its Variant title to match the variant name exactly." },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Lumaré Duo" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "info": "Leave blank to show the product title.", "default": "Red Light Device <em>for Nose &amp; Ear</em>" },
+    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.9 · 2,140+ reviews" },
+    { "type": "text", "id": "badge", "label": "Image badge", "default": "Free express shipping" },
+    { "type": "image_picker", "id": "fallback_image", "label": "Fallback image", "info": "Only used if the product has no images." },
+    { "type": "image_picker", "id": "bg_image", "label": "Gallery background (optional)" },
+    { "type": "header", "content": "Bundles & button" },
+    { "type": "text", "id": "bundles_label", "label": "Bundles heading", "default": "Choose your bundle" },
+    { "type": "text", "id": "save_label", "label": "Savings label", "default": "Save" },
+    { "type": "text", "id": "each_label", "label": "Per-device label", "default": "each" },
+    { "type": "text", "id": "atc_label", "label": "Button text", "default": "Add to bag" },
+    { "type": "text", "id": "sold_out_label", "label": "Sold out text", "default": "Sold out" },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    { "type": "header", "content": "Reassurance" },
+    { "type": "text", "id": "arrival_text", "label": "Delivery text", "default": "Order today, arrives by" },
+    { "type": "range", "id": "delivery_days", "label": "Delivery working days", "min": 1, "max": 15, "step": 1, "default": 3 },
+    { "type": "text", "id": "assure_2", "label": "Trial text", "default": "60-night trial. Not for you? Send it back for a full refund." },
+    { "type": "text", "id": "assure_3", "label": "Warranty text", "default": "2-year warranty and UK-based customer care." },
+    { "type": "header", "content": "Details" },
+    { "type": "text", "id": "in_box_title", "label": "In the box heading", "default": "In the box" },
+    { "type": "textarea", "id": "in_box", "label": "In the box (one per line)", "default": "1× Lumaré Duo device\n1× USB-C charging cable\n1× Soft travel pouch\n1× Ritual guide" },
+    { "type": "text", "id": "specs_title", "label": "Specs heading", "default": "Specifications" },
+    { "type": "textarea", "id": "specs", "label": "Specs (Label: Value per line)", "default": "Wavelength: 650nm red LED\nSession: 10 minutes, auto shut-off\nIntensity: 3 levels\nCharging: USB-C\nTips: Soft, flexible silicone\nFinish: Matte obsidian" },
+    { "type": "text", "id": "safety_title", "label": "Safety heading", "default": "Safety & who it's for" },
+    { "type": "richtext", "id": "safety", "label": "Safety text", "default": "<p>For adults 18+. Do not use if you are pregnant, photosensitive, taking photosensitising medication, or have an injury, infection or recent surgery in the nose or ear. Never insert the tips forcefully. If you have a medical condition, speak to your doctor before use.</p>" },
+    { "type": "checkbox", "id": "show_description", "label": "Show product description", "default": false },
+    { "type": "text", "id": "description_title", "label": "Description heading", "default": "Description" },
+    { "type": "header", "content": "Cart drawer" },
+    { "type": "text", "id": "drawer_title", "label": "Title", "default": "Your bag" },
+    { "type": "text", "id": "drawer_ship", "label": "Shipping banner", "default": "You've unlocked free express shipping" },
+    { "type": "text", "id": "empty_text", "label": "Empty bag text", "default": "Your bag is empty." },
+    { "type": "text", "id": "upsell_text", "label": "Upgrade nudge", "info": "[bundle] = the upgrade bundle's name, [save] = the saving vs buying singles.", "default": "Upgrade to [bundle] and save [save]" },
+    { "type": "text", "id": "upsell_button", "label": "Upgrade button", "default": "Upgrade" },
+    { "type": "text", "id": "upgrade_toast", "label": "Upgrade message", "default": "Upgraded — nice choice." },
+    { "type": "text", "id": "subtotal_label", "label": "Subtotal label", "default": "Subtotal" },
+    { "type": "text", "id": "shipping_label", "label": "Shipping label", "default": "Shipping" },
+    { "type": "text", "id": "shipping_note", "label": "Shipping value", "default": "Free" },
+    { "type": "text", "id": "checkout_label", "label": "Checkout button", "default": "Secure checkout" },
+    { "type": "text", "id": "cart_link_label", "label": "View bag link", "default": "View full bag" },
+    { "type": "text", "id": "trust_text", "label": "Trust line", "default": "Secure SSL checkout · 60-night trial" }
+  ],
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Bundle",
+      "settings": [
+        { "type": "text", "id": "match_variant", "label": "Variant title", "info": "Must match the variant name exactly, e.g. 1 Device.", "default": "1 Device" },
+        { "type": "range", "id": "qty", "label": "Devices in this bundle", "min": 1, "max": 10, "step": 1, "default": 1 },
+        { "type": "text", "id": "name", "label": "Name", "default": "Lumaré Duo" },
+        { "type": "text", "id": "sub", "label": "Subtext", "default": "Just for you" },
+        { "type": "text", "id": "tag", "label": "Badge (optional)" },
+        { "type": "checkbox", "id": "is_default", "label": "Selected by default", "default": false },
+        { "type": "checkbox", "id": "is_upsell", "label": "Offer as cart upgrade", "default": false }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Lumaré · Buy box",
+      "blocks": [
+        { "type": "bundle", "settings": { "match_variant": "1 Device", "qty": 1, "name": "Lumaré Duo", "sub": "Just for you" } },
+        { "type": "bundle", "settings": { "match_variant": "2 Devices", "qty": 2, "name": "Duo for Two", "sub": "One each for you & a loved one", "tag": "Most popular", "is_default": true, "is_upsell": true } },
+        { "type": "bundle", "settings": { "match_variant": "3 Devices", "qty": 3, "name": "Family Set", "sub": "Three devices · best value", "tag": "Best value" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

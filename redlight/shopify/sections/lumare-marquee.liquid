@@ -1,0 +1,39 @@
+{%- render 'lumare-assets' -%}
+<div class="lumare-scope lumare-marquee" aria-hidden="true">
+  <div class="lumare-marquee__track">
+    {%- for i in (1..2) -%}
+      {%- for block in section.blocks -%}
+        <span {% if i == 1 %}{{ block.shopify_attributes }}{% endif %}>{{ block.settings.text }}</span><i>✦</i>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+<style>
+  #shopify-section-{{ section.id }} .lumare-marquee { background: {{ section.settings.bg_color }}; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Scrolling text",
+  "tag": "div",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#14100e" }
+  ],
+  "blocks": [
+    { "type": "item", "name": "Phrase", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Drug-free" } ] }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Lumaré · Scrolling text",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Drug-free" } },
+        { "type": "item", "settings": { "text": "650nm red light" } },
+        { "type": "item", "settings": { "text": "Nose & ear" } },
+        { "type": "item", "settings": { "text": "Ten-minute ritual" } },
+        { "type": "item", "settings": { "text": "USB-C rechargeable" } },
+        { "type": "item", "settings": { "text": "Fits in a pocket" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

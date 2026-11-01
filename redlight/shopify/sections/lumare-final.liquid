@@ -1,0 +1,31 @@
+{%- render 'lumare-assets' -%}
+{%- assign final_img = section.settings.image | default: product.featured_media.preview_image -%}
+<section class="lumare-scope lumare-final" data-lumare-final>
+  <div class="lumare-final__aura" aria-hidden="true"></div>
+  <div class="lumare-wrap lumare-final__inner">
+    {%- if final_img != blank -%}
+      {{ final_img | image_url: width: 800 | image_tag: class: 'lumare-final__img', loading: 'lazy', widths: '340, 500, 680', sizes: '340px', alt: '' }}
+    {%- endif -%}
+    <h2 class="lumare-reveal">{{ section.settings.heading }}</h2>
+    {%- if section.settings.sub != blank -%}<p class="lumare-reveal">{{ section.settings.sub }}</p>{%- endif -%}
+    <a href="{{ section.settings.cta_link | default: '#lumare-shop' }}" class="lumare-btn lumare-btn--primary lumare-btn--xl lumare-reveal">{{ section.settings.cta_label }}</a>
+  </div>
+</section>
+<style>
+  #shopify-section-{{ section.id }} .lumare-final { background: {% if section.settings.bg_image != blank %}linear-gradient(rgba(12, 9, 8, .6), rgba(12, 9, 8, .6)), url('{{ section.settings.bg_image | image_url: width: 2000 }}') center/cover no-repeat{% else %}#0c0908{% endif %}; }
+  #shopify-section-{{ section.id }} .lumare-scope h2 { color: #f4ede4; }
+</style>
+{% schema %}
+{
+  "name": "Lumaré · Final push",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Leave blank to use the product's main image." },
+    { "type": "image_picker", "id": "bg_image", "label": "Background photo (optional)" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Your ten-minute <em>glow</em> starts tonight." },
+    { "type": "text", "id": "sub", "label": "Subtext", "default": "Free express shipping · 60-night trial · 2-year warranty" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Shop Lumaré Duo" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Leave blank to scroll to the buy box." }
+  ],
+  "presets": [ { "name": "Lumaré · Final push" } ]
+}
+{% endschema %}
